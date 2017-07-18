@@ -1,6 +1,6 @@
 # FOTOMETRIA
 
-Fotometria is a Python library to perform aperture photometry time series. 
+Fotometria is a Python package with libraries and tools to perform aperture photometry time series. 
 
 To start using the FOTOMETRIA tools, download the following libraries:
 
