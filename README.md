@@ -22,12 +22,12 @@ Usage example:
   star = Target(xcoord,ycoord)
   
   searchRadius = 50  # in pixels units
-  star.recenter(im, searchRadius, None)
+  star.recenter(im, searchRadius)
   
   star.calculateSky(im, innerRadius=25, outerRadius=50)
   print star.skyflux, star.skyfluxvar
   
-  star.aperPhotometry(im, photRadius=15, working_mask=None)
+  star.aperPhotometry(im, photRadius=15)
   print star.flux, star.fluxvar
 ```
 One can find more examples on how to use the FOTOMETRIA libraries in the tools available. For instance, there is a tool called `photometry.py`, which is a command line application to perform photometry time series of several images. Along with this we also include the tools `imcombine.py` and `flatcombine.py` for stacking images, which are useful to create a master bias and a master flat. There is also a plot tool `plot.py` to visualize the differential photometry time series. Finally we include a pipeline tool called `pipeline.py`, which calls all the above tools in sequence to perform the full reduction. One can use the pipeline tool as usage examples of all other tools.
