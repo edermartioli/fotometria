@@ -35,7 +35,7 @@ class Target:
 	def setphotradius(self, Radius) :
 		self.photradius = Radius
  
-	def recenter(self, im, Radius, working_mask=None) :
+	def recenter(self, im, Radius, usemax=False, working_mask=None) :
  
 		if working_mask==None:
 			working_mask = ones(im.shape,bool)
@@ -48,13 +48,15 @@ class Target:
  
 		pixels = im[where(mask)]
 
-		# Below it recenters the target at the maximum value
-		#max_idx = argmax(pixels)
-		#self.x = xm[where(mask)][max_idx]
-		#self.y = ym[where(mask)][max_idx]
- 
-		self.x = (pixels * xm[where(mask)]).sum() / pixels.sum()
-		self.y = (pixels * ym[where(mask)]).sum() / pixels.sum()
+		if usemax :
+			# Recenter using maximum value
+			max_idx = argmax(pixels)
+			self.x = xm[where(mask)][max_idx]
+			self.y = ym[where(mask)][max_idx]
+		else :
+			# Recenter using centroid:
+			self.x = (pixels * xm[where(mask)]).sum() / pixels.sum()
+			self.y = (pixels * ym[where(mask)]).sum() / pixels.sum()
  
 	def calculate_photradius(self, im, searchRadius, working_mask=None) :
 		maxsnr = 0
@@ -81,8 +83,10 @@ class Target:
 		self.skyflux = median(im[where(skymask)])
 		self.skyfluxvar = median(abs(im[where(skymask)] - self.skyflux)) / 0.674433
  
-	def aperPhotometry(self, im, photRadius, working_mask=None) :
- 
+	def aperPhotometry(self, im, photRadius=None, working_mask=None) :
+		if photRadius :
+			self.photradius = photRadius
+		
 		if working_mask==None:
 			working_mask = ones(im.shape,bool)
  
@@ -90,7 +94,7 @@ class Target:
  
 		r = sqrt((xm - self.x)**2 + (ym - self.y)**2)
  
-		photmask = (r < photRadius) * working_mask
+		photmask = (r < self.photradius) * working_mask
  
 		self.flux = (im[where(photmask)] - self.skyflux).sum()
 		self.fluxvar = (im[where(photmask)] + self.skyfluxvar).sum()
